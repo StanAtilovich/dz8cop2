@@ -2,137 +2,14 @@ import org.jetbrains.annotations.Nullable
 import java.awt.event.WindowListener
 
 
-data class Comment(
-    @Nullable
-    val id: Int,
-    val postId: Int,
-    val date: Int,
-    val text: String,
-    val attachments: Array<Attachment>? = null
-)
-
-class PostNotFoundException(message: String) : RuntimeException(message)
-
-data class Post(
-    @Nullable
-    val id: Int,
-    val contentL: String,
-    val likes: Int = 0,
-    val attachments: Array<Attachment> = emptyArray(),
-    val ownerId: Int? = 0,
-    val date: Long,
-    val views: Int? = 0,
-    val comments: Int? = null
-
-) {
-    fun printContent() {
-        println("Post with$id printted it content:$contentL")
-    }
-}
 
 
-data class Audio(
-    val id: Int,
-    val name: String
-)
+class CommentNotFoundException(msg: String) : RuntimeException(msg)
 
-data class Video(
-    val id: Int,
-    val lenght: Int
-)
-
-data class Donut(
-    val isDonut: Boolean = false,
-    val paidDuration: Int = 0,
-    val placeholder: String = "",
-    val canPublishFreeCopy: Boolean = false,
-    val editMode: String
-)
-
-interface Attachment {
-    val type: String
-}
-
-data class AudioAtachment(val audio: Audio) : Attachment {
-    override val type = "audio"
-}
+class ReasonNotFoundException(msg: String) : RuntimeException(msg)
 
 
-data class VideoAtachment(val video: Video) : Attachment {
-    override val type = "video"
-}
 
-data class DonutAtachment(
-    val dunut: Donut,
-    val isDonut: Boolean = false,
-    val paidDuration: Int = 0,
-    val canPublishFreeCopy: Boolean = false,
-    val editMode: String = " "
-) : Attachment {
-    override val type = "donut"
-}
-
-data class RepostsAtachment(
-    val count: Long,
-    val userReposted: Boolean
-) : Attachment {
-    override val type = "reposts"
-}
-
-object WallService {
-    private var posts = emptyArray<Post>()
-    private var comments = emptyArray<Comment>()
-
-    fun createComment(comment: Comment): Boolean {
-        var postFound = false
-        for (post in posts){
-            if (post.id == comment.postId){
-                postFound = true
-                comments += comment
-                println("коментарий добавлен ${comment.postId}(${comment.text})")
-            }
-        }
-        if (!postFound){
-            throw PostNotFoundException("добавление коментария невозможно не существует ${comment.postId}")
-        }
-        return true
-    }
-
-    fun add(post: Post) {
-        posts += post
-    }
-
-    fun update(postFind: Post): Boolean {
-        for ((index, post) in posts.withIndex()) {
-            if (post.id == postFind.id) {
-                posts[index] = postFind.copy(id = post.id, date = post.date)
-                return true
-            }
-        }
-        return false
-    }
-
-
-    fun like(postId: Int): Boolean {
-        for ((index, post) in posts.withIndex()) {
-            if (post.id == postId) {
-                posts[index] = post.copy(likes = post.likes + 1)
-                return true
-            }
-        }
-        return false
-    }
-
-
-    fun print() {
-        for (post in posts) {
-            println(post)
-        }
-        println()
-    }
-
-
-}
 
 
 fun main() {
@@ -250,4 +127,16 @@ fun main() {
         }catch (e: PostNotFoundException){
             println(e.message)
         }
+    try {
+        WallService.makeComplain(Complain(0,5, ReasonsComplain.ABUSE))
+    }catch(e: CommentNotFoundException){
+        println(e.message)
+    }
+    WallService.makeComplain(Complain(0,1, ReasonsComplain.SPAM))
+
+    try{
+        WallService.makeComplain(Complain(0,1))
+    }catch(e: ReasonNotFoundException){
+        println(e.message)
+    }
 }
