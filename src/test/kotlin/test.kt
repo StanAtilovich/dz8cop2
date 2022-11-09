@@ -1,5 +1,6 @@
 import org.junit.Assert
 import org.junit.Test
+
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -750,11 +751,7 @@ class Test {
 
     }
 
-    @Test(expected = PostNotFoundException::class)
-    fun shouldThrow() {
-        val comment2 = Comment(1, 2, 51122, "salam", null)
-        WallService.createComment(comment2)
-    }
+
 
     @Test
     fun testCommentAdd()
@@ -763,6 +760,11 @@ class Test {
         val postId = 1
         val result = 1
         assertEquals(result,postId)
+    }
+    @Test(expected = PostNotFoundException::class)
+    fun shouldThrow() {
+        val comment2 = Comment(1, 2, 51122, "salam", null)
+        WallService.createComment(comment2)
     }
 
 }

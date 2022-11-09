@@ -1,17 +1,9 @@
 import org.jetbrains.annotations.Nullable
 import java.awt.event.WindowListener
 
-
-
-
 class CommentNotFoundException(msg: String) : RuntimeException(msg)
 
 class ReasonNotFoundException(msg: String) : RuntimeException(msg)
-
-
-
-
-
 fun main() {
     val post = Post(
         1,

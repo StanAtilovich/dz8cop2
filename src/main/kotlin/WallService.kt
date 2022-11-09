@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.Nullable
+import java.awt.event.WindowListener
 object WallService {
     private var posts = emptyArray<Post>()
     private var comments = emptyArray<Comment>()
